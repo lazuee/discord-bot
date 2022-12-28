@@ -1,14 +1,7 @@
-import * as crypto from "node:crypto";
-
-
-
+import { Command } from "#root/classes/command";
 import { CaptchaGenerator } from "captcha-canvas";
 import { ActionRowBuilder, AttachmentBuilder, ButtonBuilder, ButtonStyle, ModalActionRowComponentBuilder, ModalBuilder, TextInputBuilder, TextInputStyle } from "discord.js";
-
-
-
-import { Command } from "#root/classes/command";
-
+import * as crypto from "node:crypto";
 
 const generator = new CaptchaGenerator().setDecoy({ opacity: 0.6, total: 15 });
 
@@ -27,7 +20,7 @@ export default new Command("verify", "prove that your not a robot").setExecutor(
 	},
 	modalSubmit: async function (interaction) {
 		const text = interaction.fields.getTextInputValue("text");
-		await interaction.followUp({ content: `done!: \`${text}\`` }).catch(console.error)
+		await interaction.followUp({ content: `done!: \`${text}\`` }).catch(console.error);
 	}
 });
 

@@ -1,12 +1,10 @@
+import { Files, Log, onceEvent, sleep, spinner } from "#utils";
+import type { Command } from "./classes/command";
 import chalk from "chalk";
 import { Client, Collection, GatewayIntentBits, Partials } from "discord.js";
 import type { Ora } from "ora";
 import { join } from "path";
 import { fetch } from "undici";
-
-import { Files, Log, onceEvent, sleep, spinner } from "#utils";
-
-import type { Command } from "./classes/command";
 
 let _spinner: Ora;
 let process_called = false;
