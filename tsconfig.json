@@ -19,7 +19,9 @@
 		"baseUrl": "./",
 		"typeRoots": ["./node_modules/@types"],
 		"paths": {
-			"#root/*": ["./src/*"]
+		"#root/*": ["./src/*"],
+		"#utils": ["./src/utils/index.ts"],
+		"#utils/*": ["./src/utils/*"]
 		},
 		"resolveJsonModule": true,
 
@@ -81,7 +83,6 @@
   "exclude": ["./node_modules", "./out"],
 	"files": ["global.d.ts"],
 	"ts-node": {
-		"pretty": true,
-		"swc": true
+		"pretty": true
 	}
 }

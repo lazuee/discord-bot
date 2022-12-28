@@ -1,6 +1,6 @@
-## project-template
+## discord-bot
 
-> A template for creating projects
+> A Bot for managing discord servers
 
 ### Contributing to the project 💻
 
@@ -12,7 +12,7 @@
 
 ### Star the project 🌟
 
-If you like the project, please leave a star on the [GitHub repository](https://github.com/lazuee/project-template).
+If you like the project, please leave a star on the [GitHub repository](https://github.com/lazuee/discord-bot).
 
 ### License 🔑
 

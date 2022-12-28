@@ -1,7 +1,7 @@
 /** @type {import("prettier").Config} */
 const config = {
 	pluginSearchDirs: [__dirname],
-	importOrder: ["^node:", "<THIRD_PARTY_MODULES>", "^#root", "^[./]"],
+	importOrder: ["^node:", "<THIRD_PARTY_MODULES>", "^#root", "^#utils", "^[./]"],
 	printWidth: 280,
 	importOrderSeparation: true,
 	importOrderSortSpecifiers: true,
