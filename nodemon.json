@@ -1,0 +1,10 @@
+{
+	"$schema": "https://json.schemastore.org/nodemon.json",
+	"exitcrash": false,
+	"verbose": true,
+	"runOnChangeOnly": false,
+	"watch": ["src"],
+	"ignore": ["./node_modules", "./out", "./test", "*.log"],
+	"ext": "js,ts,json,yaml,yml,toml",
+	"exec": "ts-node --files -r dotenv/config -r tsconfig-paths/register src/index.ts"
+}

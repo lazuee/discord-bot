@@ -1,0 +1,87 @@
+{
+	"compilerOptions": {
+		/* Visit https://aka.ms/tsconfig to read more about this file */
+
+		/* Projects */
+		"incremental": true,
+		"composite": true,
+		"tsBuildInfoFile": "./.tsbuildinfo",
+
+		/* Language and Environment */
+		"target": "ESNext",
+		"lib": ["ESNext", "DOM", "DOM.Iterable"],
+		// "jsx": "preserve",
+
+		/* Modules */
+		"module": "CommonJS",
+		"moduleResolution": "Node",
+		"rootDir": "./",
+		"baseUrl": "./",
+		"typeRoots": ["./node_modules/@types"],
+		"paths": {
+			"#root/*": ["./src/*"]
+		},
+		"resolveJsonModule": true,
+
+		/* JavaScript Support */
+		"allowJs": true,
+		"checkJs": true,
+
+		/* Emit */
+		"importsNotUsedAsValues": "error",
+		"outDir": "./out",
+		"newLine": "lf",
+		"sourceMap": true,
+		"declaration": true,
+		"importHelpers": true,
+		"noEmitOnError": true,
+		"removeComments": true,
+		"preserveConstEnums": true,
+
+		/* Interop Constraints */
+		"esModuleInterop": true,
+		"forceConsistentCasingInFileNames": true,
+
+		/* Type Checking */
+		"strict": true,
+		// "noImplicitAny": true,
+		//"strictNullChecks": true,
+		// "strictFunctionTypes": true,
+		// "strictBindCallApply": true,
+		// "strictPropertyInitialization": true,
+		// "noImplicitThis": true,
+		// "useUnknownInCatchVariables": true,
+		"alwaysStrict": true,
+		// "noUnusedLocals": true,
+		// "noUnusedParameters": true,
+		// "exactOptionalPropertyTypes": true,
+		"noImplicitReturns": true,
+		"noFallthroughCasesInSwitch": true,
+		// "noUncheckedIndexedAccess": true,
+		// "noImplicitOverride": true,
+		// "noPropertyAccessFromIndexSignature": true,
+		"allowUnusedLabels": true,
+		"allowUnreachableCode": false,
+		"skipLibCheck": true,
+
+		/* Output Formatting */
+		"pretty": true,
+
+    /* Editor Support */
+		"plugins": [
+			{"transform": "typescript-transform-paths", "useRootDirs": true},
+			{
+				"transform": "typescript-transform-paths",
+				"useRootDirs": true,
+				"afterDeclarations": true
+			}
+		]
+	},
+	"include": ["./src"],
+  "exclude": ["./node_modules", "./out"],
+	"files": ["global.d.ts"],
+	"ts-node": {
+		"pretty": true,
+		"swc": true
+	}
+}
