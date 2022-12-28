@@ -169,7 +169,6 @@ class Command<N extends string = string, D extends string = string> {
 					// Chat Input Command
 					if (interaction.isChatInputCommand()) {
 						if (interaction.commandName !== this.name) return;
-						await interaction.deferReply().catch(() => {});
 
 						try {
 							await this.executor.interaction!.call(this, interaction);
