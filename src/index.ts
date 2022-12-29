@@ -9,7 +9,7 @@ import { fetch } from "undici";
 let _spinner: Ora;
 let process_called = false;
 
-onceEvent(process, ["uncaughtException", "uncaughtExceptionMonitor", "unhandledRejection"], async (error: unknown) => {
+onceEvent(process, ["uncaughtException", "uncaughtExceptionMonitor", "unhandledRejection"], async (error: unknown, error1) => {
 	if (process_called) return;
 	process_called = true;
 
@@ -20,6 +20,8 @@ onceEvent(process, ["uncaughtException", "uncaughtExceptionMonitor", "unhandledR
 	let errorMessage = "";
 	if (error! instanceof Error) {
 		errorMessage = error?.message || error.toString();
+	} else if (error1! instanceof Error) {
+		errorMessage = error1?.message || error1.toString();
 	} else {
 		errorMessage = "Cannot determine the error.";
 	}

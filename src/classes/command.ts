@@ -1,11 +1,15 @@
-import { Log } from "#root/utils";
 import type {} from "@discordjs/builders";
 import { AnySelectMenuInteraction, ButtonInteraction, ChatInputCommandInteraction, Client, ClientEvents, Collection, InteractionType, Message, MessageContextMenuCommandInteraction, ModalSubmitInteraction, SlashCommandBuilder, UserContextMenuCommandInteraction } from "discord.js";
 import type { Promisable } from "type-fest";
 
+
+
+import { Log } from "#root/utils";
+
+
 interface EventOptions<K extends keyof ClientEvents, N extends string = string, D extends string = string> {
 	name: K;
-	run: (this: Command<N, D>, ...args: ClientEvents[K]) => Promise<void>;
+	execute: (this: Command<N, D>, ...args: ClientEvents[K]) => Promise<void>;
 	once: boolean;
 }
 
@@ -25,7 +29,7 @@ class Event<K extends keyof ClientEvents> {
 	private __validate(): void {
 		if (typeof this.__data?.name !== "string") throw new TypeError("Event name must be a string.");
 		if (typeof this.__data?.once !== "boolean") throw new TypeError("Event once must be a boolean.");
-		if (typeof this.__data?.run !== "function") throw new TypeError("Event run must be a function.");
+		if (typeof this.__data?.execute !== "function") throw new TypeError("Event execute must be a function.");
 	}
 }
 
@@ -47,12 +51,12 @@ class Command<N extends string = string, D extends string = string> {
 	public name: N;
 	public description: D;
 	public executor: {
-		button?: (this: Command<N, D>, interaction: ButtonInteraction) => Promisable<void>;
-		contextMenu?: (this: Command<N, D>, interaction: MessageContextMenuCommandInteraction | UserContextMenuCommandInteraction) => Promisable<void>;
-		selectMenu?: (this: Command<N, D>, interaction: AnySelectMenuInteraction) => Promisable<void>;
-		modalSubmit?: (this: Command<N, D>, interaction: ModalSubmitInteraction) => Promisable<void>;
-		interaction?: (this: Command<N, D>, interaction: ChatInputCommandInteraction) => Promisable<void>;
-		message?: (this: Command<N, D>, message: Message<boolean>) => Promisable<void>;
+		button?: (this: Command<N, D>, interaction: ButtonInteraction) => Promisable<unknown>;
+		contextMenu?: (this: Command<N, D>, interaction: MessageContextMenuCommandInteraction | UserContextMenuCommandInteraction) => Promisable<unknown>;
+		selectMenu?: (this: Command<N, D>, interaction: AnySelectMenuInteraction) => Promisable<unknown>;
+		modalSubmit?: (this: Command<N, D>, interaction: ModalSubmitInteraction) => Promisable<unknown>;
+		interaction?: (this: Command<N, D>, interaction: ChatInputCommandInteraction) => Promisable<unknown>;
+		message?: (this: Command<N, D>, message: Message<boolean>) => Promisable<unknown>;
 	};
 
 	private __slash = new SlashCommandBuilder();
@@ -156,7 +160,7 @@ class Command<N extends string = string, D extends string = string> {
 				} catch (error: unknown) {
 					if (error! instanceof Error) {
 						const errorMessage = error?.message || error.toString();
-						Log.error(errorMessage);
+						Log.error(`Command<${this.name}> : ${errorMessage}`);
 					}
 				}
 			}
@@ -168,27 +172,27 @@ class Command<N extends string = string, D extends string = string> {
 				case InteractionType.ApplicationCommand:
 					// Chat Input Command
 					if (interaction.isChatInputCommand()) {
-						if (interaction.commandName !== this.name) return;
+						if (!interaction.commandName.startsWith(this.name)) return;
 
 						try {
 							await this.executor.interaction!.call(this, interaction);
 						} catch (error: unknown) {
 							if (error! instanceof Error) {
 								const errorMessage = error?.message || error.toString();
-								Log.error(errorMessage);
+								Log.error(`Command<${this.name}> : ${errorMessage}`);
 							}
 						}
 					}
 
 					// Command Menu
 					else if (interaction.isContextMenuCommand()) {
-						if (interaction.commandName !== this.name) return;
+						if (!interaction.commandName.startsWith(this.name)) return;
 						try {
 							await this.executor.contextMenu!.call(this, interaction);
 						} catch (error: unknown) {
 							if (error! instanceof Error) {
 								const errorMessage = error?.message || error.toString();
-								Log.error(errorMessage);
+								Log.error(`Command<${this.name}> : ${errorMessage}`);
 							}
 						}
 					}
@@ -198,23 +202,25 @@ class Command<N extends string = string, D extends string = string> {
 				case InteractionType.MessageComponent:
 					// Button
 					if (interaction.isButton()) {
+						if (!interaction.customId.startsWith(this.name)) return;
 						try {
 							await this.executor.button!.call(this, interaction);
 						} catch (error) {
 							if (error! instanceof Error) {
 								const errorMessage = error?.message || error.toString();
-								Log.error(errorMessage);
+								Log.error(`Command<${this.name}> : ${errorMessage}`);
 							}
 						}
 					}
 					// Select Menu
 					else if (interaction.isAnySelectMenu()) {
+						if (!interaction.customId.startsWith(this.name)) return;
 						try {
 							await this.executor.selectMenu!.call(this, interaction);
 						} catch (error) {
 							if (error! instanceof Error) {
 								const errorMessage = error?.message || error.toString();
-								Log.error(errorMessage);
+								Log.error(`Command<${this.name}> : ${errorMessage}`);
 							}
 						}
 					}
@@ -223,13 +229,14 @@ class Command<N extends string = string, D extends string = string> {
 				// Modal
 				case InteractionType.ModalSubmit:
 					if (!interaction.isModalSubmit()) return;
+					if (!interaction.customId.startsWith(this.name)) return;
 
 					try {
 						await this.executor.modalSubmit!.call(this, interaction);
 					} catch (error) {
 						if (error! instanceof Error) {
 							const errorMessage = error?.message || error.toString();
-							Log.error(errorMessage);
+							Log.error(`Command<${this.name}> : ${errorMessage}`);
 						}
 					}
 					break;
@@ -241,7 +248,7 @@ class Command<N extends string = string, D extends string = string> {
 
 		for (const events of [...this.__events.values()]) {
 			for (const event of events) {
-				client[event.data.once ? "once" : "on"](event.data.name, event.data.run);
+				client[event.data.once ? "once" : "on"](event.data.name, event.data.execute.bind(this as any));
 			}
 		}
 	}
