@@ -1,6 +1,5 @@
 import chalk from "chalk";
 
-
 type LogLevel = "INFO" | "ERROR" | "SUCCESS" | "PROGRESS" | "WARNING";
 
 class Log {

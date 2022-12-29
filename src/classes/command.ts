@@ -1,11 +1,7 @@
+import { Log } from "#root/utils";
 import type {} from "@discordjs/builders";
 import { AnySelectMenuInteraction, ButtonInteraction, ChatInputCommandInteraction, Client, ClientEvents, Collection, InteractionType, Message, MessageContextMenuCommandInteraction, ModalSubmitInteraction, SlashCommandBuilder, UserContextMenuCommandInteraction } from "discord.js";
 import type { Promisable } from "type-fest";
-
-
-
-import { Log } from "#root/utils";
-
 
 interface EventOptions<K extends keyof ClientEvents, N extends string = string, D extends string = string> {
 	name: K;
