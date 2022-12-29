@@ -1,7 +1,9 @@
-import { Command } from "#root/classes/command";
+import * as crypto from "node:crypto";
+
 import { CaptchaGenerator } from "captcha-canvas";
 import { ActionRowBuilder, AttachmentBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, Collection, EmbedBuilder, ModalActionRowComponentBuilder, ModalBuilder, TextInputBuilder, TextInputStyle } from "discord.js";
-import * as crypto from "node:crypto";
+
+import { Command } from "#root/classes/command";
 
 const generator = new CaptchaGenerator().setDecoy({ opacity: 0.6, total: 15 });
 const check = new Collection<string, { interaction: ButtonInteraction; text: string }>();
@@ -10,19 +12,11 @@ export default new Command("verify", "prove that your not a robot").setExecutor(
 	message: async function (message) {
 		if (message.args![0] !== "SETUP") return;
 
-		const embed = new EmbedBuilder()
-			.setTitle("Verification Required")
-			.setDescription(
-				`
-		**To access \`${message.guild?.name}\`, you need to pass the verification first!**
-		Press on the **Verify** button below
-		`
-			)
-			.setColor("#2f3136");
+		const embed = new EmbedBuilder().setTitle("Verification Required").setDescription(`To access **${message.guild?.name}**, you need to pass the verification first!`).setColor("#2f3136");
 		const button = new ButtonBuilder().setCustomId("verify-captcha").setLabel("Verify").setStyle(ButtonStyle.Success);
 		const row = new ActionRowBuilder<ButtonBuilder>().addComponents(button);
 
-		await message.channel!.send({ content: "", embeds: [embed], components: [row] }).catch(() => {});
+		await message.channel!.send({ content: "", embeds: [embed], components: [row] }).catch(console.error);
 	},
 	button: async function (interaction) {
 		switch (interaction.customId.split("-").at(-1)) {
@@ -43,7 +37,7 @@ export default new Command("verify", "prove that your not a robot").setExecutor(
 						if (check.has(interaction.user.id)) {
 							await check
 								.get(interaction.user.id)!
-								.interaction.editReply({ content: "Try again, press **Verify** button!", embeds: [], components: [], files: [] })
+								.interaction.editReply({ content: "Try again, press `Verify` button!", embeds: [], components: [], files: [] })
 								.catch(() => {});
 
 							const embed = new EmbedBuilder().setAuthor({ name: "Unsuccessful Operation", iconURL: "https://cdn.discordapp.com/emojis/660789591900684329.webp?size=96&quality=lossless" }).setDescription("You reached the verification timeout!").setColor("#2f3136");
@@ -82,7 +76,7 @@ export default new Command("verify", "prove that your not a robot").setExecutor(
 		if (check.get(interaction.user.id)!.text.toLowerCase() !== text.toLowerCase()) {
 			await check
 				.get(interaction.user.id)!
-				.interaction.editReply({ content: "Try again, press **Verify** button!", embeds: [], components: [], files: [] })
+				.interaction.editReply({ content: "Try again, press `Verify` button!", embeds: [], components: [], files: [] })
 				.catch(() => {});
 
 			const embed = new EmbedBuilder().setAuthor({ name: "Unsuccessful Operation", iconURL: "https://cdn.discordapp.com/emojis/660789591900684329.webp?size=96&quality=lossless" }).setDescription("The captcha code you've entered is incorrect!").setColor("#2f3136");
