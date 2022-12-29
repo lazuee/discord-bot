@@ -1,20 +1,27 @@
 import * as crypto from "node:crypto";
 
+
+
 import { CaptchaGenerator } from "captcha-canvas";
 import { ActionRowBuilder, AttachmentBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, Collection, EmbedBuilder, ModalActionRowComponentBuilder, ModalBuilder, TextInputBuilder, TextInputStyle } from "discord.js";
 
+
+
 import { Command } from "#root/classes/command";
+
 
 const generator = new CaptchaGenerator().setDecoy({ opacity: 0.6, total: 15 });
 const check = new Collection<string, { interaction: ButtonInteraction; text: string }>();
 
 export default new Command("verify", "prove that your not a robot").setExecutor({
-	interaction: async function (interaction) {
+	message: async function (message) {
+		if (message.args![0] !== "SETUP") return;
+
 		const embed = new EmbedBuilder()
 			.setTitle("Verification Required")
 			.setDescription(
 				`
-		**To access \`${interaction.guild?.name}\`, you need to pass the verification first!**
+		**To access \`${message.guild?.name}\`, you need to pass the verification first!**
 		Press on the **Verify** button below
 		`
 			)
@@ -22,7 +29,7 @@ export default new Command("verify", "prove that your not a robot").setExecutor(
 		const button = new ButtonBuilder().setCustomId("verify-captcha").setLabel("Verify").setStyle(ButtonStyle.Success);
 		const row = new ActionRowBuilder<ButtonBuilder>().addComponents(button);
 
-		await interaction.channel!.send({ content: "", embeds: [embed], components: [row] }).catch(() => {});
+		await message.channel!.send({ content: "", embeds: [embed], components: [row] }).catch(() => {});
 	},
 	button: async function (interaction) {
 		switch (interaction.customId.split("-").at(-1)) {
