@@ -32,17 +32,8 @@ export default new Command("verify", "prove that your not a robot").setExecutor(
 					check.set(interaction.user.id, { interaction, text });
 
 					const embed = new EmbedBuilder()
-						.setAuthor({ name: "Are you human?", iconURL: "https://cdn.discordapp.com/emojis/660790094877163532.webp?size=96&quality=lossless" })
-						.setDescription(
-							`
-							\`please enter the captcha code to get access!\`
-
-							**Additional Notes:**
-							1. Type only colored characters from left to right.
-							2. Ignore spread decoy characters.
-							3. You can use any letter cases.
-							`
-						)
+						.setTitle("Are you human?")
+						.setDescription("please enter the captcha code to get access!")
 						.setColor("#2f3136")
 						.setImage(`attachment://${text}.png`)
 						.setFooter({ text: "Verification Period: 2 minutes" });
@@ -70,14 +61,14 @@ export default new Command("verify", "prove that your not a robot").setExecutor(
 							check.delete(interaction.user.id);
 						}
 					};
-					setTimeout(deleteCheck, 120000);
+					setTimeout(deleteCheck, 125000);
 				}
 				break;
 
 			case "answer":
 				{
-					const modal = new ModalBuilder().setCustomId("verify").setTitle("Verification Code");
-					const modalDescription = new TextInputBuilder().setCustomId("text").setLabel("Code").setRequired(true).setPlaceholder("Enter Captcha").setStyle(TextInputStyle.Short);
+					const modal = new ModalBuilder().setCustomId("verify").setTitle("Verification");
+					const modalDescription = new TextInputBuilder().setCustomId("text").setLabel("Captcha Code").setRequired(true).setPlaceholder("Enter Code").setStyle(TextInputStyle.Short);
 					const actionRow = new ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents(modalDescription);
 					modal.addComponents(actionRow);
 
